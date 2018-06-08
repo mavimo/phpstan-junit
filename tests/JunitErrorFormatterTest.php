@@ -31,7 +31,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
   <testsuite name="phpstan">
-    <testcase errors="1" failures="1" tests="1" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
+    <testcase name="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php" errors="1" failures="1" tests="1" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
       <failure message="Foo" type="error">line 4</failure>
     </testcase>
   </testsuite>
@@ -63,11 +63,11 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
   <testsuite name="phpstan">
-    <testcase errors="2" failures="2" tests="2" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
+    <testcase name="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php" errors="2" failures="2" tests="2" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
       <failure message="Foo" type="error">line 4</failure>
       <failure message="Bar" type="error">line 2</failure>
     </testcase>
-    <testcase errors="2" failures="2" tests="2" file="foo.php">
+    <testcase name="foo.php" errors="2" failures="2" tests="2" file="foo.php">
       <failure message="Foo" type="error">line 1</failure>
       <failure message="Bar" type="error">line 5</failure>
     </testcase>
@@ -101,11 +101,11 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
   <testsuite name="phpstan">
-    <testcase errors="2" failures="2" tests="2" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
+    <testcase name="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php" errors="2" failures="2" tests="2" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
       <failure message="Foo" type="error">line 4</failure>
       <failure message="Bar" type="error">line 2</failure>
     </testcase>
-    <testcase errors="2" failures="2" tests="2" file="foo.php">
+    <testcase name="foo.php" errors="2" failures="2" tests="2" file="foo.php">
       <failure message="Foo" type="error">line 1</failure>
       <failure message="Bar" type="error">line 5</failure>
     </testcase>

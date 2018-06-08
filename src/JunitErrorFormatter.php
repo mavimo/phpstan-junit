@@ -49,6 +49,7 @@ class JunitErrorFormatter implements ErrorFormatter
 
             foreach ($fileErrors as $file => $errors) {
                 $testcase = $dom->createElement('testcase');
+                $testcase->setAttribute('name', RelativePathHelper::getRelativePath($currentDirectory, $file));
                 $testcase->setAttribute('failures', (string) count($errors));
                 $testcase->setAttribute('errors', (string) count($errors));
                 $testcase->setAttribute('tests', (string) count($errors));
