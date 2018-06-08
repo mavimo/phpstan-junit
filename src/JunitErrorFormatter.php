@@ -51,7 +51,7 @@ class JunitErrorFormatter implements ErrorFormatter
                 $testcase = $dom->createElement('testcase');
                 $testcase->setAttribute('name', RelativePathHelper::getRelativePath($currentDirectory, $file));
                 $testcase->setAttribute('failures', (string) count($errors));
-                $testcase->setAttribute('errors', (string) count($errors));
+                $testcase->setAttribute('errors', (string) 0);
                 $testcase->setAttribute('tests', (string) count($errors));
                 $testcase->setAttribute('file', RelativePathHelper::getRelativePath($currentDirectory, $file));
 
@@ -69,7 +69,7 @@ class JunitErrorFormatter implements ErrorFormatter
             if (count($genericErrors) > 0) {
                 $testcase = $dom->createElement('testcase');
                 $testcase->setAttribute('failures', (string) count($genericErrors));
-                $testcase->setAttribute('errors', (string) count($genericErrors));
+                $testcase->setAttribute('errors', (string) 0);
                 $testcase->setAttribute('tests', (string) count($genericErrors));
 
                 foreach ($genericErrors as $genericError) {
