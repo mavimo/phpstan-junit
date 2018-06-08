@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Mavimo\PHPStan\ErrorFormatter;
 
 use DOMDocument;
+use DomElement;
+use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
+use PHPStan\Command\ErrorFormatter\RelativePathHelper;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Style\OutputStyle;
 
@@ -19,14 +22,15 @@ class JunitErrorFormatter implements ErrorFormatter
     ): int
     {
         $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->formatOutput = true;
 
         $testsuites = $dom->appendChild($dom->createElement('testsuites'));
-        $testsuites->setAttribute('name', 'phpstan');
+        $testsuites->setAttribute('name', 'static analysis');
 
         $returnCode = 1;
 
         if (!$analysisResult->hasErrors()) {
-            /** @var \DomElement $testsuite */
+            /** @var DomElement $testsuite */
             $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
             $testsuite->setAttribute('name', 'phpstan');
             $testsuite->setAttribute('tests', '1');
@@ -50,57 +54,50 @@ class JunitErrorFormatter implements ErrorFormatter
                 $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
             }
 
+            /** @var DomElement $testsuite */
+            $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
+
+            $totalErrors = 0;
             foreach ($fileErrors as $file => $errors) {
-                /** @var \DomElement $testsuite */
-                $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
-                $testsuite->setAttribute('name', RelativePathHelper::getRelativePath($currentDirectory, $file));
-                $testsuite->setAttribute('failures', (string) count($errors));
-
                 foreach ($errors as $error) {
-                    $testcase = $dom->createElement('testcase');
-                    $testcase->setAttribute('name', (string) $error->getLine());
-                    $testcase->setAttribute('failures', (string) 1);
-                    $testcase->setAttribute('errors', (string) 0);
-                    $testcase->setAttribute('tests', (string) 1);
+                    $fileName = RelativePathHelper::getRelativePath($currentDirectory, $file);
+                    $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
 
-                    $failure = $dom->createElement('failure');
-                    $failure->setAttribute('type', 'error');
-                    $failure->setAttribute('message', $error->getMessage());
-                    $testcase->appendChild($failure);
-
-                    $testsuite->appendChild($testcase);
+                    $totalErrors++;
                 }
             }
 
             $genericErrors = $analysisResult->getNotFileSpecificErrors();
             if (count($genericErrors) > 0) {
-                /** @var \DomElement $testsuite */
-                $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
-                $testsuite->setAttribute('name', 'Generic errors');
-                $testsuite->setAttribute('failures', (string) count($genericErrors));
-
                 foreach ($genericErrors as $i => $genericError) {
-                    $testcase = $dom->createElement('testcase');
-                    $testcase->setAttribute('name', sprintf('issue %d', $i + 1));
-                    $testcase->setAttribute('failures', (string) 1);
-                    $testcase->setAttribute('errors', (string) 0);
-                    $testcase->setAttribute('tests', (string) 1);
+                    $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
 
-                    $failure = $dom->createElement('failure');
-                    $failure->setAttribute('type', 'error');
-                    $failure->setAttribute('message', $genericError);
-                    $testcase->appendChild($failure);
-
-                    $testsuite->appendChild($testcase);
+                    $totalErrors++;
                 }
             }
-        }
 
-        $dom->formatOutput = true;
+            $testsuite->setAttribute('name', 'phpstan');
+            $testsuite->setAttribute('failures', (string) $totalErrors);
+        }
 
         $style->write($style->isDecorated() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML());
 
         return $returnCode;
     }
 
+    private function createTestCase(DOMDocument $dom, DomElement $testsuite, string $reference, ?string $message)
+    {
+        $testcase = $dom->createElement('testcase');
+        $testcase->setAttribute('name', $reference);
+        $testcase->setAttribute('failures', (string) 1);
+        $testcase->setAttribute('errors', (string) 0);
+        $testcase->setAttribute('tests', (string) 1);
+
+        $failure = $dom->createElement('failure');
+        $failure->setAttribute('type', 'error');
+        $failure->setAttribute('message', $message);
+        $testcase->appendChild($failure);
+
+        $testsuite->appendChild($testcase);
+    }
 }
