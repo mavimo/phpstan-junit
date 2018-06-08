@@ -54,17 +54,14 @@ class JunitErrorFormatter implements ErrorFormatter
                 /** @var \DomElement $testsuite */
                 $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
                 $testsuite->setAttribute('name', RelativePathHelper::getRelativePath($currentDirectory, $file));
+                $testsuite->setAttribute('failures', (string) count($errors));
 
                 foreach ($errors as $error) {
                     $testcase = $dom->createElement('testcase');
-                    $testcase->setAttribute('name', sprintf(
-                        '%s:%d',
-                        RelativePathHelper::getRelativePath($currentDirectory, $file),
-                        $error->getLine()
-                    ));
-                    $testcase->setAttribute('failures', (string) count($errors));
+                    $testcase->setAttribute('name', (string) $error->getLine());
+                    $testcase->setAttribute('failures', (string) 1);
                     $testcase->setAttribute('errors', (string) 0);
-                    $testcase->setAttribute('tests', (string) count($errors));
+                    $testcase->setAttribute('tests', (string) 1);
 
                     $failure = $dom->createElement('failure');
                     $failure->setAttribute('type', 'error');
@@ -80,13 +77,14 @@ class JunitErrorFormatter implements ErrorFormatter
                 /** @var \DomElement $testsuite */
                 $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
                 $testsuite->setAttribute('name', 'Generic errors');
+                $testsuite->setAttribute('failures', (string) count($genericErrors));
 
                 foreach ($genericErrors as $i => $genericError) {
                     $testcase = $dom->createElement('testcase');
-                    $testcase->setAttribute('name', sprintf('Generic error %d', $i));
-                    $testcase->setAttribute('failures', (string) count($genericErrors));
-                    $testcase->setAttribute('errors', (string) 0    );
-                    $testcase->setAttribute('tests', (string) count($genericErrors));
+                    $testcase->setAttribute('name', sprintf('issue %d', $i + 1));
+                    $testcase->setAttribute('failures', (string) 1);
+                    $testcase->setAttribute('errors', (string) 0);
+                    $testcase->setAttribute('tests', (string) 1);
 
                     $failure = $dom->createElement('failure');
                     $failure->setAttribute('type', 'error');
