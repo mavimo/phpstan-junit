@@ -15,9 +15,9 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
+<testsuites name="phpstan">
   <testsuite failures="0" name="phpstan" tests="1">
-    <testcase/>
+    <testcase name="phpstan"/>
   </testsuite>
 </testsuites>
 ',
@@ -29,10 +29,10 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             1,
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="phpstan">
-    <testcase name="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php" errors="0" failures="1" tests="1" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
-      <failure message="Foo" type="error">line 4</failure>
+<testsuites name="phpstan">
+  <testsuite name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php">
+    <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="1">
+      <failure message="Foo" type="error"/>
     </testcase>
   </testsuite>
 </testsuites>
@@ -45,9 +45,9 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             1,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="phpstan">
-    <testcase errors="0" failures="1" tests="1">
+<testsuites name="phpstan">
+  <testsuite name="Generic errors">
+    <testcase errors="0" failures="1" name="Generic error 0" tests="1">
       <failure message="first generic error" type="error" />
     </testcase>
   </testsuite>
@@ -61,15 +61,21 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             4,
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="phpstan">
-    <testcase name="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php" errors="0" failures="2" tests="2" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
-      <failure message="Foo" type="error">line 4</failure>
-      <failure message="Bar" type="error">line 2</failure>
+<testsuites name="phpstan">
+  <testsuite name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php">
+    <testcase errors="0" failures="2" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="2">
+      <failure message="Foo" type="error"/>
     </testcase>
-    <testcase name="foo.php" errors="0" failures="2" tests="2" file="foo.php">
-      <failure message="Foo" type="error">line 1</failure>
-      <failure message="Bar" type="error">line 5</failure>
+    <testcase errors="0" failures="2" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2" tests="2">
+      <failure message="Bar" type="error"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="foo.php">
+    <testcase errors="0" failures="2" name="foo.php:1" tests="2">
+      <failure message="Foo" type="error"/>
+    </testcase>
+    <testcase errors="0" failures="2" name="foo.php:5" tests="2">
+      <failure message="Bar" type="error"/>
     </testcase>
   </testsuite>
 </testsuites>
@@ -82,10 +88,12 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             2,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="phpstan">
-    <testcase errors="0" failures="2" tests="2">
-      <failure message="first generic error" type="error" />
+<testsuites name="phpstan">
+  <testsuite name="Generic errors">
+    <testcase errors="0" failures="2" name="Generic error 0" tests="2">
+      <failure message="first generic error" type="error"/>
+    </testcase>
+    <testcase errors="0" failures="2" name="Generic error 1" tests="2">
       <failure message="second generic error" type="error" />
     </testcase>
   </testsuite>
@@ -99,18 +107,28 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             4,
             2,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="phpstan">
-    <testcase name="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php" errors="0" failures="2" tests="2" file="folder with unicode 😃/file name with &quot;spaces&quot; and unicode 😃.php">
-      <failure message="Foo" type="error">line 4</failure>
-      <failure message="Bar" type="error">line 2</failure>
+<testsuites name="phpstan">
+  <testsuite name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php">
+    <testcase errors="0" failures="2" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="2">
+      <failure message="Foo" type="error"/>
     </testcase>
-    <testcase name="foo.php" errors="0" failures="2" tests="2" file="foo.php">
-      <failure message="Foo" type="error">line 1</failure>
-      <failure message="Bar" type="error">line 5</failure>
+    <testcase errors="0" failures="2" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2" tests="2">
+      <failure message="Bar" type="error"/>
     </testcase>
-    <testcase errors="0" failures="2" tests="2">
+  </testsuite>
+  <testsuite name="foo.php">
+    <testcase errors="0" failures="2" name="foo.php:1" tests="2">
+      <failure message="Foo" type="error"/>
+    </testcase>
+    <testcase errors="0" failures="2" name="foo.php:5" tests="2">
+      <failure message="Bar" type="error"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Generic errors">
+    <testcase errors="0" failures="2" name="Generic error 0" tests="2">
       <failure message="first generic error" type="error"/>
+    </testcase>
+    <testcase errors="0" failures="2" name="Generic error 1" tests="2">
       <failure message="second generic error" type="error"/>
     </testcase>
   </testsuite>
