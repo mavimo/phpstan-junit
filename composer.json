@@ -4,8 +4,8 @@
 	"license": ["MIT"],
 	"minimum-stability": "dev",
 	"require": {
-		"php": "~7.1",
-		"phpstan/phpstan": "dev-master"
+		"php": "^7.0",
+		"phpstan/phpstan": "^0.9"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^7.0"
