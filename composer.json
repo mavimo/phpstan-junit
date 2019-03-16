@@ -1,18 +1,18 @@
 {
-	"name": "mavimo/phpstan-junit",
-	"description": "PHPStan JUnit error reporter",
-	"license": ["MIT"],
-	"minimum-stability": "dev",
-	"require": {
-		"php": "~7.1",
-		"phpstan/phpstan": "^0.10"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "^7.0"
-	},
-	"autoload": {
-		"psr-4": {"Mavimo\\PHPStan\\ErrorFormatter\\": "src/"}
-	},
+    "name": "mavimo/phpstan-junit",
+    "description": "PHPStan JUnit error reporter",
+    "license": ["MIT"],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "~7.1",
+        "phpstan/phpstan": "^0.10"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {"Mavimo\\PHPStan\\ErrorFormatter\\": "src/"}
+    },
     "autoload-dev": {
         "classmap": ["tests", "vendor/phpstan/phpstan/tests/PHPStan"]
     }
