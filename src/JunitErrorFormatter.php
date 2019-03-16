@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mavimo\PHPStan\ErrorFormatter;
 
 use DOMDocument;
-use DomElement;
+use DOMElement;
 use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
@@ -15,26 +15,27 @@ use Symfony\Component\Console\Style\OutputStyle;
 
 class JunitErrorFormatter implements ErrorFormatter
 {
-
     public function formatErrors(
         AnalysisResult $analysisResult,
         OutputStyle $style
-    ): int
-    {
+    ): int {
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $testsuites = $dom->appendChild($dom->createElement('testsuites'));
+        $testsuites = $dom->createElement('testsuites');
         $testsuites->setAttribute('name', 'static analysis');
+        $dom->appendChild($testsuites);
 
         $returnCode = 1;
 
         if (!$analysisResult->hasErrors()) {
             /** @var DomElement $testsuite */
-            $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
+            $testsuite = $dom->createElement('testsuite');
             $testsuite->setAttribute('name', 'phpstan');
             $testsuite->setAttribute('tests', '1');
             $testsuite->setAttribute('failures', '0');
+
+            $testsuites->appendChild($testsuite);
 
             $testcase = $dom->createElement('testcase');
             $testcase->setAttribute('name', 'phpstan');
@@ -85,7 +86,7 @@ class JunitErrorFormatter implements ErrorFormatter
         return $returnCode;
     }
 
-    private function createTestCase(DOMDocument $dom, DomElement $testsuite, string $reference, ?string $message)
+    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message)
     {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
@@ -95,7 +96,9 @@ class JunitErrorFormatter implements ErrorFormatter
 
         $failure = $dom->createElement('failure');
         $failure->setAttribute('type', 'error');
-        $failure->setAttribute('message', $message);
+        if ($message !== null) {
+            $failure->setAttribute('message', $message);
+        }
         $testcase->appendChild($failure);
 
         $testsuite->appendChild($testcase);
