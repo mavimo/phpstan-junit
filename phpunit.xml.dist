@@ -19,6 +19,16 @@
         </testsuite>
     </testsuites>
 
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-clover" target="clover-report.xml" />
+    </logging>
+
     <php>
         <ini name="display_errors" value="On"/>
         <ini name="memory_limit" value="-1"/>
