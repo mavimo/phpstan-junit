@@ -1,16 +1,21 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Mavimo\Tests\PHPStan\ErrorFormatter;
 
+use Generator;
 use Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter;
 use PHPStan\Command\ErrorFormatter\TestBaseFormatter;
 
 class JunitErrorFormatterTest extends TestBaseFormatter
 {
-
-    public function dataFormatterOutputProvider(): iterable
+    /**
+     * [dataFormatterOutputProvider description]
+     *
+     * @return \Generator<array<int, string|int>>
+     */
+    public function dataFormatterOutputProvider(): Generator
     {
         yield [
             'No errors',
@@ -135,8 +140,9 @@ class JunitErrorFormatterTest extends TestBaseFormatter
     }
 
     /**
-     * @dataProvider dataFormatterOutputProvider
+     * Test generated use cases for JUnit output format.
      *
+     * @dataProvider dataFormatterOutputProvider
      * @param string $message
      * @param int    $exitCode
      * @param int    $numFileErrors
@@ -149,8 +155,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
         int $numFileErrors,
         int $numGenericErrors,
         string $expected
-    ): void
-    {
+    ): void {
         $formatter = new JunitErrorFormatter();
 
         $this->assertSame($exitCode, $formatter->formatErrors(
@@ -160,5 +165,4 @@ class JunitErrorFormatterTest extends TestBaseFormatter
 
         $this->assertXmlStringEqualsXmlString($expected, $this->getOutputContent(), sprintf('%s: XML do not match', $message));
     }
-
 }

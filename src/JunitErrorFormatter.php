@@ -6,12 +6,12 @@ namespace Mavimo\PHPStan\ErrorFormatter;
 
 use DOMDocument;
 use DOMElement;
-use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
 use PHPStan\Command\ErrorFormatter\RelativePathHelper;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Style\OutputStyle;
+use function sprintf;
 
 class JunitErrorFormatter implements ErrorFormatter
 {
@@ -29,7 +29,7 @@ class JunitErrorFormatter implements ErrorFormatter
         $returnCode = 1;
 
         if (!$analysisResult->hasErrors()) {
-            /** @var DomElement $testsuite */
+            /** @var \DomElement $testsuite */
             $testsuite = $dom->createElement('testsuite');
             $testsuite->setAttribute('name', 'phpstan');
             $testsuite->setAttribute('tests', '1');
@@ -45,8 +45,9 @@ class JunitErrorFormatter implements ErrorFormatter
         } else {
             $currentDirectory = $analysisResult->getCurrentDirectory();
 
-            /** @var \PHPStan\Analyser\Error[][] $fileErrors */
+            /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
             $fileErrors = [];
+
             foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
                 if (!isset($fileErrors[$fileSpecificError->getFile()])) {
                     $fileErrors[$fileSpecificError->getFile()] = [];
@@ -55,25 +56,27 @@ class JunitErrorFormatter implements ErrorFormatter
                 $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
             }
 
-            /** @var DomElement $testsuite */
+            /** @var \DomElement $testsuite */
             $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
 
             $totalErrors = 0;
+
             foreach ($fileErrors as $file => $errors) {
                 foreach ($errors as $error) {
                     $fileName = RelativePathHelper::getRelativePath($currentDirectory, $file);
                     $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
 
-                    $totalErrors++;
+                    $totalErrors += 1;
                 }
             }
 
             $genericErrors = $analysisResult->getNotFileSpecificErrors();
+
             if (count($genericErrors) > 0) {
-                foreach ($genericErrors as $i => $genericError) {
+                foreach ($genericErrors as $genericError) {
                     $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
 
-                    $totalErrors++;
+                    $totalErrors += 1;
                 }
             }
 
@@ -86,7 +89,7 @@ class JunitErrorFormatter implements ErrorFormatter
         return $returnCode;
     }
 
-    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message)
+    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message): void
     {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
@@ -96,9 +99,11 @@ class JunitErrorFormatter implements ErrorFormatter
 
         $failure = $dom->createElement('failure');
         $failure->setAttribute('type', 'error');
+
         if ($message !== null) {
             $failure->setAttribute('message', $message);
         }
+
         $testcase->appendChild($failure);
 
         $testsuite->appendChild($testcase);
