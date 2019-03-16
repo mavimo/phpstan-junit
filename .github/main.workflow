@@ -3,7 +3,7 @@ workflow "Testing" {
   resolves = [
     "phpunit",
     "phpcs",
-    "phpstan-unit",
+    "phpstan",
     "phpstan-integration",
   ]
 }
@@ -25,7 +25,7 @@ action "phpcs" {
   args = "vendor/bin/phpcs"
 }
 
-action "phpstan-unit" {
+action "phpstan" {
   uses = "docker://php:7.2"
   needs = ["dependency"]
   args = "vendor/bin/phpstan analyse --level=7 --no-progress ./src ./tests"
