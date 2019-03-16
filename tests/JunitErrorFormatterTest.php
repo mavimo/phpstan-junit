@@ -2,8 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Mavimo\PHPStan\ErrorFormatter;
+namespace Mavimo\Tests\PHPStan\ErrorFormatter;
 
+use Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter;
 use PHPStan\Command\ErrorFormatter\TestBaseFormatter;
 
 class JunitErrorFormatterTest extends TestBaseFormatter

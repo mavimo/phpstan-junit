@@ -11,9 +11,16 @@
         "phpunit/phpunit": "^8.0"
     },
     "autoload": {
-        "psr-4": {"Mavimo\\PHPStan\\ErrorFormatter\\": "src/"}
+        "psr-4": {
+            "Mavimo\\PHPStan\\ErrorFormatter\\": "src/"
+        }
     },
     "autoload-dev": {
-        "classmap": ["tests", "vendor/phpstan/phpstan/tests/PHPStan"]
+        "classmap": [
+            "vendor/phpstan/phpstan/tests/PHPStan"
+        ],
+        "psr-4": {
+            "Mavimo\\Tests\\PHPStan\\ErrorFormatter\\": "tests/"
+        }
     }
 }
