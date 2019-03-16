@@ -34,5 +34,5 @@ action "phpstan" {
 action "phpstan-integration" {
   uses = "docker://php:7.2"
   needs = ["dependency"]
-  args = "vendor/bin/phpstan analyse --level=7 --no-progress --errorFormat=junit ./src ./tests"
+  args = "vendor/bin/phpstan analyse --level=7 --no-progress --error-format=junit ./src ./tests"
 }
