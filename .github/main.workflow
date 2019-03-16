@@ -2,6 +2,7 @@ workflow "Testing" {
   on = "push"
   resolves = [
     "phpunit",
+    "phpcs",
     "phpstan-unit",
     "phpstan-integration",
   ]
@@ -16,6 +17,12 @@ action "phpunit" {
   uses = "docker://php:7.2"
   needs = ["dependency"]
   args = "vendor/bin/phpunit"
+}
+
+action "phpcs" {
+  uses = "docker://php:7.2"
+  needs = ["dependency"]
+  args = "vendor/bin/phpcs"
 }
 
 action "phpstan-unit" {
