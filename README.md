@@ -23,6 +23,19 @@ You need to require the version `0.1.0` of this package:
 composer require --dev mavimo/phpstan-junit:~0.1.0
 ```
 
+You should require this extension on `phpstan.neon` file in the root of your project or the file you specify to phpstan using the `--config` flag by referencing `extension.neon` file:
+
+```
+includes:
+    - vendor/mavimo/phpstan-junit/phpstan.neon
+```
+or declaring the service via:
+```
+services:
+    errorFormatter.junit:
+        class: Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
+```
+
 #### PHPStan 0.11
 
 The current version is not marked as stable (should be in some week), so you need to pull the version from master:
@@ -30,23 +43,17 @@ The current version is not marked as stable (should be in some week), so you nee
 composer require --dev mavimo/phpstan-junit:dev-master
 ```
 
-### Configure
+You should require this extension on `phpstan.neon` file in the root of your project or the file you specify to phpstan using the `--config` flag by referencing `extension.neon` file:
 
-You should require this package from your phpstan configuration file, that can be the `phpstan.neon` file in the root of your project or the file you specify to phpstan using the `--config` flag.
-
-You can install it adding:
-
+```
+includes:
+    - vendor/mavimo/phpstan-junit/extension.neon
+```
+or declaring the service via:
 ```
 services:
     errorFormatter.junit:
         class: Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
-```
-
-or referencing the `phpstan.neon` file from `mavimo/phpstan-junit` using:
-
-```
-includes:
-    - vendor/mavimo/phpstan-junit/phpstan.neon
 ```
 
 ### Generate JUnit report
@@ -64,8 +71,8 @@ Contributions are welcome!
 PR's will be merged only if:
 
  - *phpunit* is :white_check_mark:, you can run it using `vendor/bin/phpunit`
- - *phpstan* is :white_check_mark:, you can run it using `vendor/bin/phpstan analyse --level=7 src/ tests/`
+ - *phpstan* is :white_check_mark:, you can run it using `vendor/bin/phpstan analyse`
  - *phpcs* is :white_check_mark:, you can run it using `vendor/bin/phpcs`
- - *code coverage* will not decrease (or there are good reason to decrease it)
+ - *code coverage* will not decrease (or there are good reason to decrease it), you can check the current coverage using `phpdbg -qrr ./vendor/bin/phpunit --coverage-text`
 
 If you have any question feel free to open a issue or contact me!
