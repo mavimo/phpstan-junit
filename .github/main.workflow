@@ -28,13 +28,13 @@ action "phpcs" {
 action "phpstan" {
   uses = "docker://php:7.2"
   needs = ["dependency"]
-  args = "vendor/bin/phpstan analyse --level=7 --no-progress ./src ./tests"
+  args = "vendor/bin/phpstan analyse"
 }
 
 action "phpstan-integration" {
   uses = "docker://php:7.2"
   needs = ["dependency"]
-  args = "vendor/bin/phpstan analyse --level=7 --no-progress --error-format=junit ./src ./tests"
+  args = "vendor/bin/phpstan analyse --no-progress --error-format=junit"
 }
 
 action "codecoverage" {
