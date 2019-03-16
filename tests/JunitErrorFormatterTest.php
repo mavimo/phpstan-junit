@@ -7,6 +7,7 @@ namespace Mavimo\Tests\PHPStan\ErrorFormatter;
 use Generator;
 use Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter;
 use PHPStan\Command\ErrorFormatter\TestBaseFormatter;
+use PHPStan\File\RelativePathHelper;
 
 class JunitErrorFormatterTest extends TestBaseFormatter
 {
@@ -156,7 +157,9 @@ class JunitErrorFormatterTest extends TestBaseFormatter
         int $numGenericErrors,
         string $expected
     ): void {
-        $formatter = new JunitErrorFormatter();
+        $relativePathHelper = new RelativePathHelper(self::DIRECTORY_PATH, DIRECTORY_SEPARATOR, []);
+
+        $formatter = new JunitErrorFormatter($relativePathHelper);
 
         $this->assertSame($exitCode, $formatter->formatErrors(
             $this->getAnalysisResult($numFileErrors, $numGenericErrors),

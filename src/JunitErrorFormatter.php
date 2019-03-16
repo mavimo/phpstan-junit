@@ -8,13 +8,23 @@ use DOMDocument;
 use DOMElement;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
-use PHPStan\Command\ErrorFormatter\RelativePathHelper;
+use PHPStan\File\RelativePathHelper;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Style\OutputStyle;
 use function sprintf;
 
 class JunitErrorFormatter implements ErrorFormatter
 {
+    /**
+     * @var \PHPStan\File\RelativePathHelper
+     */
+    private $relativePathHelper;
+
+    public function __construct(RelativePathHelper $relativePathHelper)
+    {
+        $this->relativePathHelper = $relativePathHelper;
+    }
+
     public function formatErrors(
         AnalysisResult $analysisResult,
         OutputStyle $style
@@ -43,8 +53,6 @@ class JunitErrorFormatter implements ErrorFormatter
 
             $returnCode = 0;
         } else {
-            $currentDirectory = $analysisResult->getCurrentDirectory();
-
             /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
             $fileErrors = [];
 
@@ -63,7 +71,7 @@ class JunitErrorFormatter implements ErrorFormatter
 
             foreach ($fileErrors as $file => $errors) {
                 foreach ($errors as $error) {
-                    $fileName = RelativePathHelper::getRelativePath($currentDirectory, $file);
+                    $fileName = $this->relativePathHelper->getRelativePath($file);
                     $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
 
                     $totalErrors += 1;

@@ -19,5 +19,5 @@ services:
 than execute it by running:
 
 ```
-vendor/bin/phpstan --configuration=phpstan.neon --errorFormat=junit --level=7 --no-progress --no-interaction analyse SOURCE_CODE_DIR
+vendor/bin/phpstan --configuration=phpstan.neon --error-format=junit --level=7 --no-progress --no-interaction analyse SOURCE_CODE_DIR
 ```
