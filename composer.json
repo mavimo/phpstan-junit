@@ -3,6 +3,13 @@
     "description": "PHPStan JUnit error reporter",
     "license": ["MIT"],
     "minimum-stability": "stable",
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    },
     "require": {
         "php": "~7.1",
         "phpstan/phpstan": "^0.11"

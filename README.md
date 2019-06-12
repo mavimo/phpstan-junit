@@ -40,10 +40,10 @@ services:
 
 The current version is not marked as stable (should be in some week), so you need to pull the version from master:
 ```
-composer require --dev mavimo/phpstan-junit:dev-master
+composer require --dev mavimo/phpstan-junit:~0.2.0
 ```
 
-You should require this extension on `phpstan.neon` file in the root of your project or the file you specify to phpstan using the `--config` flag by referencing `extension.neon` file:
+If you also install [phpstan/extension-installer](https://github.com/phpstan/extension-installer) then you're all set; if you don't want to use `phpstan/extension-installer`, you should require the `extension.neon` file on your `phpstan.neon.dist` file in the root of your project (or on the file you specify to phpstan using the `--config` flag):
 
 ```
 includes:
