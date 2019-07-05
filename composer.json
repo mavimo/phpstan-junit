@@ -2,6 +2,12 @@
     "name": "mavimo/phpstan-junit",
     "description": "PHPStan JUnit error reporter",
     "license": ["MIT"],
+    "authors": [
+        {
+            "name": "Marco Vito Moscaritolo",
+            "email": "mavimo@gmail.com"
+        }
+    ],
     "minimum-stability": "stable",
     "extra": {
         "phpstan": {

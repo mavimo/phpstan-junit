@@ -39,7 +39,7 @@ class JunitErrorFormatter implements ErrorFormatter
         $returnCode = 1;
 
         if (!$analysisResult->hasErrors()) {
-            /** @var \DomElement $testsuite */
+            /** @var \DOMElement $testsuite */
             $testsuite = $dom->createElement('testsuite');
             $testsuite->setAttribute('name', 'phpstan');
             $testsuite->setAttribute('tests', '1');
@@ -64,7 +64,7 @@ class JunitErrorFormatter implements ErrorFormatter
                 $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
             }
 
-            /** @var \DomElement $testsuite */
+            /** @var \DOMElement $testsuite */
             $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
 
             $totalErrors = 0;
