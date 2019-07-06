@@ -4,7 +4,6 @@ workflow "Testing" {
     "phpcs",
     "phpstan",
     "codecoverage",
-    "integration-test-run",
   ]
 }
 
@@ -38,21 +37,27 @@ action "codecoverage" {
   args = "-f clover-report.xml"
 }
 
-action "integration-test-prepare" {
+workflow "Integration test" {
+  resolves = [
+    "test",
+  ]
+  on = "push"
+}
+
+action "prepare" {
   uses = "docker://bash"
   runs = "sh -l -c"
   args = ["sed -i 's/{GITHUB_SHA}/'\"$GITHUB_SHA\"'/' $GITHUB_WORKSPACE/tests-integration/composer.json"]
-  #args = ["REPLACEMENT=$(echo '/{GITHUB_SHA}/'$GITHUB_SHA'/g') && sed $REPLACEMENT tests-integration/composer.json"]
 }
 
-action "integration-test-composer-install" {
+action "composer-install" {
   uses = "docker://composer"
-  needs = ["integration-test-prepare"]
+  needs = ["prepare"]
   args = "install --working-dir tests-integration"
 }
 
-action "integration-test-run" {
+action "test" {
   uses = "docker://php:7.2"
-  needs = ["integration-test-composer-install"]
-  args = "tests-integration/vendor/bin/phpstan analyse --no-progress --error-format=junit src"
+  needs = ["composer-install"]
+  args = "tests-integration/vendor/bin/phpstan analyse --configuration tests-integration/phpstan.neon.dist --no-progress --error-format=junit src"
 }
