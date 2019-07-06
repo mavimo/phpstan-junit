@@ -1,14 +1,15 @@
-workflow "Integration tests" {
-  on = "push"
+workflow "Integration test" {
   resolves = [
     "test",
   ]
+  on = "push"
 }
 
 action "prepare" {
   uses = "docker://bash"
   runs = "sh -l -c"
   args = ["sed -i 's/{GITHUB_SHA}/'\"$GITHUB_SHA\"'/' $GITHUB_WORKSPACE/tests-integration/composer.json"]
+
   #args = ["REPLACEMENT=$(echo '/{GITHUB_SHA}/'$GITHUB_SHA'/g') && sed $REPLACEMENT tests-integration/composer.json"]
 }
 
