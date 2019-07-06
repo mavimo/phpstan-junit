@@ -1,6 +1,7 @@
 {
     "name": "mavimo/phpstan-junit",
     "description": "PHPStan JUnit error reporter",
+    "type": "phpstan-extension",
     "license": ["MIT"],
     "authors": [
         {
