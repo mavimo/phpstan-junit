@@ -1,0 +1,22 @@
+{
+    "name": "mavimo/phpstan-junit-tests-integration",
+    "authors": [
+        {
+            "name": "Marco Vito Moscaritolo",
+            "email": "mavimo@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "../"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev": {
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^0.11",
+        "mavimo/phpstan-junit": "dev-master#{GITHUB_SHA}"
+    }
+}
