@@ -70,9 +70,9 @@ Contributions are welcome!
 
 PR's will be merged only if:
 
-  - *phpunit* is :white_check_mark:, you can run it using `vendor/bin/phpunit`
-  - *phpstan* is :white_check_mark:, you can run it using `vendor/bin/phpstan analyse`
-  - *phpcs* is :white_check_mark:, you can run it using `vendor/bin/phpcs`
-  - *code coverage* will not decrease (or there are good reason to decrease it), you can check the current coverage using `phpdbg -qrr ./vendor/bin/phpunit --coverage-text`
+- *phpunit* is :white_check_mark:, you can run it using `vendor/bin/phpunit`
+- *phpstan* is :white_check_mark:, you can run it using `vendor/bin/phpstan analyse`
+- *phpcs* is :white_check_mark:, you can run it using `vendor/bin/phpcs`
+- *code coverage* will not decrease (or there are good reason to decrease it), you can check the current coverage using `phpdbg -qrr ./vendor/bin/phpunit --coverage-text`
 
 If you have any question feel free to open a issue or contact me!
