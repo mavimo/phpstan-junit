@@ -89,6 +89,7 @@ class JunitErrorFormatter implements ErrorFormatter
             }
 
             $testsuite->setAttribute('name', 'phpstan');
+            $testsuite->setAttribute('tests', (string) $totalErrors);
             $testsuite->setAttribute('failures', (string) $totalErrors);
         }
 

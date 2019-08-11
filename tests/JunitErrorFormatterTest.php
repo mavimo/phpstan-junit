@@ -39,7 +39,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="static analysis">
-  <testsuite failures="1" name="phpstan">
+  <testsuite failures="1" name="phpstan" tests="1">
     <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="1">
       <failure message="Foo" type="error" />
     </testcase>
@@ -55,7 +55,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             1,
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="static analysis">
-  <testsuite failures="1" name="phpstan">
+  <testsuite failures="1" name="phpstan" tests="1">
     <testcase errors="0" failures="1" name="Generic error" tests="1">
       <failure message="first generic error" type="error" />
     </testcase>
@@ -71,7 +71,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="static analysis">
-  <testsuite failures="4" name="phpstan">
+  <testsuite failures="4" name="phpstan" tests="4">
     <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2" tests="1">
       <failure message="Bar" type="error" />
     </testcase>
@@ -96,7 +96,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             2,
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="static analysis">
-  <testsuite failures="2" name="phpstan">
+  <testsuite failures="2" name="phpstan" tests="2">
     <testcase errors="0" failures="1" name="Generic error" tests="1">
       <failure message="first generic error" type="error" />
     </testcase>
@@ -115,7 +115,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             2,
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="static analysis">
-  <testsuite failures="6" name="phpstan">
+  <testsuite failures="6" name="phpstan" tests="6">
     <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2" tests="1">
       <failure message="Bar" type="error" />
     </testcase>
