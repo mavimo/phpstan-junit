@@ -68,18 +68,13 @@ class JunitErrorFormatter implements ErrorFormatter
             $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
 
             foreach ($fileErrors as $file => $errors) {
-                foreach ($errors as $error) {
-                    $fileName = $this->relativePathHelper->getRelativePath($file);
-                    $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
-                }
+                $this->createTestCase($dom, $testsuite, $this->relativePathHelper->getRelativePath($file), $errors);
             }
 
             $genericErrors = $analysisResult->getNotFileSpecificErrors();
 
             if (count($genericErrors) > 0) {
-                foreach ($genericErrors as $genericError) {
-                    $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
-                }
+                $this->createTestCase($dom, $testsuite, 'Generic errors', $genericErrors);
             }
 
             $testsuite->setAttribute('name', 'phpstan');
@@ -92,23 +87,32 @@ class JunitErrorFormatter implements ErrorFormatter
         return $returnCode;
     }
 
-    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message): void
+    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, array $errors): void
     {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
-        $testcase->setAttribute('failures', (string) 1);
-        $testcase->setAttribute('errors', (string) 0);
-        $testcase->setAttribute('tests', (string) 1);
+        $testcase->setAttribute('failures', (string) count($errors));
+        $testcase->setAttribute('errors', '0');
+        $testcase->setAttribute('tests', (string) count($errors));
 
-        $failure = $dom->createElement('failure');
-        $failure->setAttribute('type', 'error');
+        foreach ($errors as $error) {
+            if ($error instanceof Error) {
+                $this->createFailure($dom, $testcase, sprintf('Line %s: %s', $error->getLine(), $error->getMessage()));
+                continue;
+            }
 
-        if ($message !== null) {
-            $failure->setAttribute('message', $message);
+            $this->createFailure($dom, $testcase, $error);
         }
 
-        $testcase->appendChild($failure);
-
         $testsuite->appendChild($testcase);
+    }
+
+    private function createFailure(DOMDocument $dom, DOMElement $testcase, string $message): void
+    {
+        $failure = $dom->createElement('failure');
+        $failure->setAttribute('type', 'error');
+        $failure->setAttribute('message', $message);
+
+        $testcase->appendChild($failure);
     }
 }
