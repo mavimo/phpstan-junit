@@ -47,7 +47,7 @@ class JunitErrorFormatter implements ErrorFormatter
             $this->createTestCase($dom, $testsuite, 'phpstan', []);
         } else {
             /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
-            $fileErrors = array_reduce($analysisResult->getFileSpecificErrors(), [$this, 'groupErrorsByFile'], []);
+            $fileErrors = array_reduce($analysisResult->getFileSpecificErrors(), $this->groupErrorsByFileCallback(), []);
 
             foreach ($fileErrors as $file => $errors) {
                 $this->createTestCase($dom, $testsuite, $this->relativePathHelper->getRelativePath($file), $errors);
@@ -65,6 +65,13 @@ class JunitErrorFormatter implements ErrorFormatter
         return intval($analysisResult->hasErrors());
     }
 
+    /**
+     * @param \DOMDocument $dom
+     * @param \DOMElement $testsuite
+     * @param string $reference
+     * @param array<int,string|\PHPStan\Analyser\Error> $errors
+     * @return void
+     */
     private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, array $errors): void
     {
         $testcase = $dom->createElement('testcase');
@@ -76,6 +83,7 @@ class JunitErrorFormatter implements ErrorFormatter
         foreach ($errors as $error) {
             if ($error instanceof Error) {
                 $this->createFailure($dom, $testcase, sprintf('Line %s: %s', $error->getLine(), $error->getMessage()));
+
                 continue;
             }
 
@@ -94,19 +102,16 @@ class JunitErrorFormatter implements ErrorFormatter
         $testcase->appendChild($failure);
     }
 
-    /**
-     * @param array<int,\PHPStan\Analyser\Error> $carry
-     * @param \PHPStan\Analyser\Error $error
-     * @return array<int,\PHPStan\Analyser\Error>
-     */
-    private function groupErrorsByFile(array $carry, Error $error): array
+    private function groupErrorsByFileCallback(): callable
     {
-        if (!array_key_exists($error->getFile(), $carry)) {
-            $carry[$error->getFile()] = [];
-        }
+        return static function (array $carry, Error $error): array {
+            if (!array_key_exists($error->getFile(), $carry)) {
+                $carry[$error->getFile()] = [];
+            }
 
-        $carry[$error->getFile()][] = $error;
+            $carry[$error->getFile()][] = $error;
 
-        return $carry;
+            return $carry;
+        };
     }
 }
