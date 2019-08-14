@@ -45,9 +45,7 @@ class JunitErrorFormatter implements ErrorFormatter
         $returnCode = 1;
 
         if (!$analysisResult->hasErrors()) {
-            $testcase = $dom->createElement('testcase');
-            $testcase->setAttribute('name', 'phpstan');
-            $testsuite->appendChild($testcase);
+            $this->createTestCase($dom, $testsuite, 'phpstan', []);
 
             $returnCode = 0;
         } else {
