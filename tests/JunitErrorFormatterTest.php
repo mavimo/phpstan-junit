@@ -25,7 +25,7 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="static analysis">
-  <testsuite failures="0" name="phpstan" tests="1">
+  <testsuite failures="0" name="phpstan" tests="0">
     <testcase name="phpstan"/>
   </testsuite>
 </testsuites>

@@ -36,17 +36,15 @@ class JunitErrorFormatter implements ErrorFormatter
         $testsuites->setAttribute('name', 'static analysis');
         $dom->appendChild($testsuites);
 
+        $testsuite = $dom->createElement('testsuite');
+        $testsuite->setAttribute('name', 'phpstan');
+        $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
+        $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
+        $testsuites->appendChild($testsuite);
+
         $returnCode = 1;
 
         if (!$analysisResult->hasErrors()) {
-            /** @var \DOMElement $testsuite */
-            $testsuite = $dom->createElement('testsuite');
-            $testsuite->setAttribute('name', 'phpstan');
-            $testsuite->setAttribute('tests', '1');
-            $testsuite->setAttribute('failures', '0');
-
-            $testsuites->appendChild($testsuite);
-
             $testcase = $dom->createElement('testcase');
             $testcase->setAttribute('name', 'phpstan');
             $testsuite->appendChild($testcase);
@@ -64,9 +62,6 @@ class JunitErrorFormatter implements ErrorFormatter
                 $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
             }
 
-            /** @var \DOMElement $testsuite */
-            $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
-
             foreach ($fileErrors as $file => $errors) {
                 foreach ($errors as $error) {
                     $fileName = $this->relativePathHelper->getRelativePath($file);
@@ -81,10 +76,6 @@ class JunitErrorFormatter implements ErrorFormatter
                     $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
                 }
             }
-
-            $testsuite->setAttribute('name', 'phpstan');
-            $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
-            $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
         }
 
         $style->write($style->isDecorated() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML());
