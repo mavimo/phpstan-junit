@@ -6,6 +6,7 @@ namespace Mavimo\PHPStan\ErrorFormatter;
 
 use DOMDocument;
 use DOMElement;
+use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
 use PHPStan\File\RelativePathHelper;
@@ -46,15 +47,7 @@ class JunitErrorFormatter implements ErrorFormatter
             $this->createTestCase($dom, $testsuite, 'phpstan', []);
         } else {
             /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
-            $fileErrors = [];
-
-            foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
-                if (!isset($fileErrors[$fileSpecificError->getFile()])) {
-                    $fileErrors[$fileSpecificError->getFile()] = [];
-                }
-
-                $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
-            }
+            $fileErrors = array_reduce($analysisResult->getFileSpecificErrors(), [$this, 'groupErrorsByFile'], []);
 
             foreach ($fileErrors as $file => $errors) {
                 $this->createTestCase($dom, $testsuite, $this->relativePathHelper->getRelativePath($file), $errors);
@@ -99,5 +92,21 @@ class JunitErrorFormatter implements ErrorFormatter
         $failure->setAttribute('message', $message);
 
         $testcase->appendChild($failure);
+    }
+
+    /**
+     * @param array<int,\PHPStan\Analyser\Error> $carry
+     * @param \PHPStan\Analyser\Error $error
+     * @return array<int,\PHPStan\Analyser\Error>
+     */
+    private function groupErrorsByFile(array $carry, Error $error): array
+    {
+        if (!array_key_exists($error->getFile(), $carry)) {
+            $carry[$error->getFile()] = [];
+        }
+
+        $carry[$error->getFile()][] = $error;
+
+        return $carry;
     }
 }
