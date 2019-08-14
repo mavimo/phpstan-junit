@@ -67,14 +67,10 @@ class JunitErrorFormatter implements ErrorFormatter
             /** @var \DOMElement $testsuite */
             $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
 
-            $totalErrors = 0;
-
             foreach ($fileErrors as $file => $errors) {
                 foreach ($errors as $error) {
                     $fileName = $this->relativePathHelper->getRelativePath($file);
                     $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
-
-                    $totalErrors += 1;
                 }
             }
 
@@ -83,14 +79,12 @@ class JunitErrorFormatter implements ErrorFormatter
             if (count($genericErrors) > 0) {
                 foreach ($genericErrors as $genericError) {
                     $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
-
-                    $totalErrors += 1;
                 }
             }
 
             $testsuite->setAttribute('name', 'phpstan');
-            $testsuite->setAttribute('tests', (string) $totalErrors);
-            $testsuite->setAttribute('failures', (string) $totalErrors);
+            $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
+            $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
         }
 
         $style->write($style->isDecorated() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML());
