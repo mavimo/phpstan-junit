@@ -33,9 +33,11 @@ class JunitErrorFormatter implements ErrorFormatter
         $dom->formatOutput = true;
 
         $testsuite = $dom->createElement('testsuite');
+        $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
         $testsuite->setAttribute('name', 'phpstan');
         $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
-        $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
+        $testsuite->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $testsuite->setAttribute('xsi:noNamespaceSchemaLocation', 'https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd');
         $dom->appendChild($testsuite);
 
         if (!$analysisResult->hasErrors()) {
@@ -66,13 +68,8 @@ class JunitErrorFormatter implements ErrorFormatter
         $testcase->setAttribute('name', $reference);
 
         if ($message !== null) {
-            $testcase->setAttribute('failures', (string) 1);
-            $testcase->setAttribute('errors', (string) 0);
-            $testcase->setAttribute('tests', (string) 1);
-
             $failure = $dom->createElement('failure');
             $failure->setAttribute('message', $message);
-            $failure->setAttribute('type', 'error');
 
             $testcase->appendChild($failure);
         }
