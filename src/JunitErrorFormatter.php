@@ -50,10 +50,8 @@ class JunitErrorFormatter implements ErrorFormatter
 
             $genericErrors = $analysisResult->getNotFileSpecificErrors();
 
-            if (count($genericErrors) > 0) {
-                foreach ($genericErrors as $genericError) {
-                    $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
-                }
+            foreach ($genericErrors as $genericError) {
+                $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
             }
         }
 
