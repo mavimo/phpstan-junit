@@ -42,14 +42,10 @@ class JunitErrorFormatter implements ErrorFormatter
         $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
         $testsuites->appendChild($testsuite);
 
-        $returnCode = 1;
-
         if (!$analysisResult->hasErrors()) {
             $testcase = $dom->createElement('testcase');
             $testcase->setAttribute('name', 'phpstan');
             $testsuite->appendChild($testcase);
-
-            $returnCode = 0;
         } else {
             /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
             $fileErrors = [];
@@ -80,7 +76,7 @@ class JunitErrorFormatter implements ErrorFormatter
 
         $style->write($style->isDecorated() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML());
 
-        return $returnCode;
+        return intval($analysisResult->hasErrors());
     }
 
     private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message): void
