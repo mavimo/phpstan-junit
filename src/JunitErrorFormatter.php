@@ -32,15 +32,11 @@ class JunitErrorFormatter implements ErrorFormatter
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $testsuites = $dom->createElement('testsuites');
-        $testsuites->setAttribute('name', 'static analysis');
-        $dom->appendChild($testsuites);
-
         $testsuite = $dom->createElement('testsuite');
         $testsuite->setAttribute('name', 'phpstan');
         $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
         $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
-        $testsuites->appendChild($testsuite);
+        $dom->appendChild($testsuite);
 
         if (!$analysisResult->hasErrors()) {
             $this->createTestCase($dom, $testsuite, 'phpstan');
