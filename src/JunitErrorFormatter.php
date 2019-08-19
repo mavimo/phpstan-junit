@@ -47,22 +47,11 @@ class JunitErrorFormatter implements ErrorFormatter
             $testcase->setAttribute('name', 'phpstan');
             $testsuite->appendChild($testcase);
         } else {
-            /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
-            $fileErrors = [];
+            $fileErrors = $analysisResult->getFileSpecificErrors();
 
-            foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
-                if (!isset($fileErrors[$fileSpecificError->getFile()])) {
-                    $fileErrors[$fileSpecificError->getFile()] = [];
-                }
-
-                $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
-            }
-
-            foreach ($fileErrors as $file => $errors) {
-                foreach ($errors as $error) {
-                    $fileName = $this->relativePathHelper->getRelativePath($file);
-                    $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
-                }
+            foreach ($fileErrors as $error) {
+                $fileName = $this->relativePathHelper->getRelativePath($error->getFile());
+                $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
             }
 
             $genericErrors = $analysisResult->getNotFileSpecificErrors();
