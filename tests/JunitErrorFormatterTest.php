@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mavimo\Tests\PHPStan\ErrorFormatter;
 
+use DOMDocument;
 use Generator;
 use Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter;
 use PHPStan\Command\ErrorFormatter\TestBaseFormatter;
@@ -151,6 +152,11 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             $this->getAnalysisResult($numFileErrors, $numGenericErrors),
             $this->getErrorConsoleStyle()
         ), sprintf('%s: response code do not match', $message));
+        
+        $xml = new DOMDocument();
+        $xml->loadXML($this->getOutputContent());
+
+        $this->assertTrue($xml->schemaValidate('https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd'));
 
         $this->assertXmlStringEqualsXmlString($expected, $this->getOutputContent(), sprintf('%s: XML do not match', $message));
     }
