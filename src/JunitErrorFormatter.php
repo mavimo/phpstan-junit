@@ -43,9 +43,7 @@ class JunitErrorFormatter implements ErrorFormatter
         $testsuites->appendChild($testsuite);
 
         if (!$analysisResult->hasErrors()) {
-            $testcase = $dom->createElement('testcase');
-            $testcase->setAttribute('name', 'phpstan');
-            $testsuite->appendChild($testcase);
+            $this->createTestCase($dom, $testsuite, 'phpstan');
         } else {
             $fileErrors = $analysisResult->getFileSpecificErrors();
 
@@ -68,22 +66,22 @@ class JunitErrorFormatter implements ErrorFormatter
         return intval($analysisResult->hasErrors());
     }
 
-    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message): void
+    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message = null): void
     {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
-        $testcase->setAttribute('failures', (string) 1);
-        $testcase->setAttribute('errors', (string) 0);
-        $testcase->setAttribute('tests', (string) 1);
-
-        $failure = $dom->createElement('failure');
-        $failure->setAttribute('type', 'error');
 
         if ($message !== null) {
-            $failure->setAttribute('message', $message);
-        }
+            $testcase->setAttribute('failures', (string) 1);
+            $testcase->setAttribute('errors', (string) 0);
+            $testcase->setAttribute('tests', (string) 1);
 
-        $testcase->appendChild($failure);
+            $failure = $dom->createElement('failure');
+            $failure->setAttribute('message', $message);
+            $failure->setAttribute('type', 'error');
+
+            $testcase->appendChild($failure);
+        }
 
         $testsuite->appendChild($testcase);
     }
