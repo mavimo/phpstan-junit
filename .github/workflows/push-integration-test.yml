@@ -1,0 +1,25 @@
+name: Integration test
+on: push
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: prepare
+      uses: docker://bash
+      with:
+        entrypoint: sh
+        args: -l -c "sed -i 's/{GITHUB_SHA}/'\"${GITHUB_SHA}\"'/' ${GITHUB_WORKSPACE}/tests-integration/composer.json"
+
+    - name: composer-install
+      uses: docker://composer
+      with:
+        args: install --working-dir tests-integration
+
+    - name: test
+      uses: docker://php:7.2
+      with:
+        args: tests-integration/vendor/bin/phpstan analyse --configuration tests-integration/phpstan.neon.dist
+          --no-progress --error-format=junit src
