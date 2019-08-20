@@ -1,0 +1,57 @@
+name: Testing
+on: push
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: composer-install
+      uses: docker://composer
+      with:
+        args: install --prefer-source --no-progress
+
+    - name: phpunit
+      uses: docker://php:7.2
+      with:
+        args: phpdbg -qrr ./vendor/bin/phpunit
+
+    - name: codecoverage
+      uses: pleo-io/actions/codecov@master
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        args: -f clover-report.xml
+
+  phpstan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: composer-install
+      uses: docker://composer
+      with:
+        args: install --prefer-source --no-progress
+
+    - name: phpstan
+      uses: docker://php:7.2
+      with:
+        args: vendor/bin/phpstan analyse
+
+  phpcs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: composer-install
+      uses: docker://composer
+      with:
+        args: install --prefer-source --no-progress
+
+    - name: phpcs
+      uses: docker://php:7.2
+      with:
+        args: vendor/bin/phpcs
