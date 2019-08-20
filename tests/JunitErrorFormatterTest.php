@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mavimo\Tests\PHPStan\ErrorFormatter;
 
+use DOMDocument;
 use Generator;
 use Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter;
 use PHPStan\Command\ErrorFormatter\TestBaseFormatter;
@@ -24,11 +25,9 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="static analysis">
-  <testsuite failures="0" name="phpstan" tests="1">
-    <testcase name="phpstan"/>
-  </testsuite>
-</testsuites>
+<testsuite failures="0" name="phpstan" tests="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">
+  <testcase name="phpstan"/>
+</testsuite>
 ',
         ];
 
@@ -38,13 +37,11 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             1,
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="static analysis">
-  <testsuite failures="1" name="phpstan" tests="1">
-    <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="1">
-      <failure message="Foo" type="error" />
-    </testcase>
-  </testsuite>
-</testsuites>
+<testsuite failures="1" name="phpstan" tests="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">
+  <testcase name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4">
+    <failure message="Foo" />
+  </testcase>
+</testsuite>
 ',
         ];
 
@@ -54,13 +51,11 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             1,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="static analysis">
-  <testsuite failures="1" name="phpstan" tests="1">
-    <testcase errors="0" failures="1" name="Generic error" tests="1">
-      <failure message="first generic error" type="error" />
-    </testcase>
-  </testsuite>
-</testsuites>
+<testsuite failures="1" name="phpstan" tests="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">
+  <testcase name="Generic error">
+    <failure message="first generic error" />
+  </testcase>
+</testsuite>
 ',
         ];
 
@@ -70,22 +65,20 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             4,
             0,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="static analysis">
-  <testsuite failures="4" name="phpstan" tests="4">
-    <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2" tests="1">
-      <failure message="Bar" type="error" />
-    </testcase>
-    <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="1">
-      <failure message="Foo" type="error" />
-    </testcase>
-    <testcase errors="0" failures="1" name="foo.php:1" tests="1">
-      <failure message="Foo" type="error"/>
-    </testcase>
-    <testcase errors="0" failures="1" name="foo.php:5" tests="1">
-      <failure message="Bar" type="error"/>
-    </testcase>
-  </testsuite>
-</testsuites>
+<testsuite failures="4" name="phpstan" tests="4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">
+  <testcase name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2">
+    <failure message="Bar" />
+  </testcase>
+  <testcase name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4">
+    <failure message="Foo" />
+  </testcase>
+  <testcase name="foo.php:1">
+    <failure message="Foo"/>
+  </testcase>
+  <testcase name="foo.php:5">
+    <failure message="Bar"/>
+  </testcase>
+</testsuite>
 ',
         ];
 
@@ -95,16 +88,14 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             0,
             2,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="static analysis">
-  <testsuite failures="2" name="phpstan" tests="2">
-    <testcase errors="0" failures="1" name="Generic error" tests="1">
-      <failure message="first generic error" type="error" />
-    </testcase>
-    <testcase errors="0" failures="1" name="Generic error" tests="1">
-      <failure message="second generic error" type="error"/>
-    </testcase>
-  </testsuite>
-</testsuites>
+<testsuite failures="2" name="phpstan" tests="2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">
+  <testcase name="Generic error">
+    <failure message="first generic error" />
+  </testcase>
+  <testcase name="Generic error">
+    <failure message="second generic error"/>
+  </testcase>
+</testsuite>
 ',
         ];
 
@@ -114,28 +105,26 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             4,
             2,
             '<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="static analysis">
-  <testsuite failures="6" name="phpstan" tests="6">
-    <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2" tests="1">
-      <failure message="Bar" type="error" />
-    </testcase>
-    <testcase errors="0" failures="1" name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4" tests="1">
-      <failure message="Foo" type="error" />
-    </testcase>
-    <testcase errors="0" failures="1" name="foo.php:1" tests="1">
-      <failure message="Foo" type="error"/>
-    </testcase>
-    <testcase errors="0" failures="1" name="foo.php:5" tests="1">
-      <failure message="Bar" type="error"/>
-    </testcase>
-    <testcase errors="0" failures="1" name="Generic error" tests="1">
-      <failure message="first generic error" type="error" />
-    </testcase>
-    <testcase errors="0" failures="1" name="Generic error" tests="1">
-      <failure message="second generic error" type="error"/>
-    </testcase>
-  </testsuite>
-</testsuites>
+<testsuite failures="6" name="phpstan" tests="6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">
+  <testcase name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:2">
+    <failure message="Bar" />
+  </testcase>
+  <testcase name="folder with unicode &#x1F603;/file name with &quot;spaces&quot; and unicode &#x1F603;.php:4">
+    <failure message="Foo" />
+  </testcase>
+  <testcase name="foo.php:1">
+    <failure message="Foo"/>
+  </testcase>
+  <testcase name="foo.php:5">
+    <failure message="Bar"/>
+  </testcase>
+  <testcase name="Generic error">
+    <failure message="first generic error" />
+  </testcase>
+  <testcase name="Generic error">
+    <failure message="second generic error"/>
+  </testcase>
+</testsuite>
 ',
         ];
     }
@@ -163,6 +152,11 @@ class JunitErrorFormatterTest extends TestBaseFormatter
             $this->getAnalysisResult($numFileErrors, $numGenericErrors),
             $this->getErrorConsoleStyle()
         ), sprintf('%s: response code do not match', $message));
+        
+        $xml = new DOMDocument();
+        $xml->loadXML($this->getOutputContent());
+
+        $this->assertTrue($xml->schemaValidate('https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd'));
 
         $this->assertXmlStringEqualsXmlString($expected, $this->getOutputContent(), sprintf('%s: XML do not match', $message));
     }

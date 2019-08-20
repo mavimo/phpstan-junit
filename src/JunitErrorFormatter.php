@@ -32,88 +32,47 @@ class JunitErrorFormatter implements ErrorFormatter
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
-        $testsuites = $dom->createElement('testsuites');
-        $testsuites->setAttribute('name', 'static analysis');
-        $dom->appendChild($testsuites);
-
-        $returnCode = 1;
+        $testsuite = $dom->createElement('testsuite');
+        $testsuite->setAttribute('failures', (string) $analysisResult->getTotalErrorsCount());
+        $testsuite->setAttribute('name', 'phpstan');
+        $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
+        $testsuite->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $testsuite->setAttribute('xsi:noNamespaceSchemaLocation', 'https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd');
+        $dom->appendChild($testsuite);
 
         if (!$analysisResult->hasErrors()) {
-            /** @var \DOMElement $testsuite */
-            $testsuite = $dom->createElement('testsuite');
-            $testsuite->setAttribute('name', 'phpstan');
-            $testsuite->setAttribute('tests', '1');
-            $testsuite->setAttribute('failures', '0');
-
-            $testsuites->appendChild($testsuite);
-
-            $testcase = $dom->createElement('testcase');
-            $testcase->setAttribute('name', 'phpstan');
-            $testsuite->appendChild($testcase);
-
-            $returnCode = 0;
+            $this->createTestCase($dom, $testsuite, 'phpstan');
         } else {
-            /** @var array<string,array<int,\PHPStan\Analyser\Error>> $fileErrors */
-            $fileErrors = [];
+            $fileErrors = $analysisResult->getFileSpecificErrors();
 
-            foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
-                if (!isset($fileErrors[$fileSpecificError->getFile()])) {
-                    $fileErrors[$fileSpecificError->getFile()] = [];
-                }
-
-                $fileErrors[$fileSpecificError->getFile()][] = $fileSpecificError;
-            }
-
-            /** @var \DOMElement $testsuite */
-            $testsuite = $testsuites->appendChild($dom->createElement('testsuite'));
-
-            $totalErrors = 0;
-
-            foreach ($fileErrors as $file => $errors) {
-                foreach ($errors as $error) {
-                    $fileName = $this->relativePathHelper->getRelativePath($file);
-                    $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
-
-                    $totalErrors += 1;
-                }
+            foreach ($fileErrors as $error) {
+                $fileName = $this->relativePathHelper->getRelativePath($error->getFile());
+                $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
             }
 
             $genericErrors = $analysisResult->getNotFileSpecificErrors();
 
-            if (count($genericErrors) > 0) {
-                foreach ($genericErrors as $genericError) {
-                    $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
-
-                    $totalErrors += 1;
-                }
+            foreach ($genericErrors as $genericError) {
+                $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
             }
-
-            $testsuite->setAttribute('name', 'phpstan');
-            $testsuite->setAttribute('tests', (string) $totalErrors);
-            $testsuite->setAttribute('failures', (string) $totalErrors);
         }
 
         $style->write($style->isDecorated() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML());
 
-        return $returnCode;
+        return intval($analysisResult->hasErrors());
     }
 
-    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message): void
+    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message = null): void
     {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
-        $testcase->setAttribute('failures', (string) 1);
-        $testcase->setAttribute('errors', (string) 0);
-        $testcase->setAttribute('tests', (string) 1);
-
-        $failure = $dom->createElement('failure');
-        $failure->setAttribute('type', 'error');
 
         if ($message !== null) {
+            $failure = $dom->createElement('failure');
             $failure->setAttribute('message', $message);
-        }
 
-        $testcase->appendChild($failure);
+            $testcase->appendChild($failure);
+        }
 
         $testsuite->appendChild($testcase);
     }
