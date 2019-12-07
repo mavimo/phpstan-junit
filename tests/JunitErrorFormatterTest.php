@@ -25,11 +25,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
     }
 
     /**
-     * phpcs:disable
-     *
      * @return \Generator<array<int, string|int>>
-     *
-     * phpcs:enable
      */
     public function dataFormatterOutputProvider(): Generator
     {
@@ -141,10 +137,6 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
      * Test generated use cases for JUnit output format.
      *
      * @dataProvider dataFormatterOutputProvider
-     * @param int    $exitCode
-     * @param int    $numFileErrors
-     * @param int    $numGenericErrors
-     * @param string $expected
      */
     public function testFormatErrors(
         int $exitCode,
