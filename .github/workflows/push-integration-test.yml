@@ -13,12 +13,6 @@ jobs:
         entrypoint: sh
         args: -c "go get github.com/drone/envsubst/cmd/envsubst; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
 
-    - name: get-composer-content
-      uses: docker://bash
-      with:
-        entrypoint: bash
-        args: -l -c "cat ${GITHUB_WORKSPACE}/tests-integration/composer.json"
-
     - name: composer-install
       uses: docker://composer
       with:
