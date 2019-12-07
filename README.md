@@ -9,7 +9,7 @@
 [![Packagist](http://img.shields.io/packagist/dm/mavimo/phpstan-junit.svg)](https://packagist.org/packages/mavimo/phpstan-junit)
 [![Packagist](http://img.shields.io/packagist/dd/mavimo/phpstan-junit.svg)](https://packagist.org/packages/mavimo/phpstan-junit)
 
-The main scope for this project is to create error report in **JUnit** format that can be easly integrated in *Jenkins* or other tools that use this information.
+The main scope for this project is to create error report in **JUnit** format that can be easly integrated in _Jenkins_ or other tools that use this information.
 
 ## How to use it
 
@@ -18,7 +18,7 @@ The main scope for this project is to create error report in **JUnit** format th
 You need to include this library in your project as dev-dependency, it dependes on the version of phpstan you're using you should use a different version of `mavimo/phpstan-junit` library, this table will give you a dependency map:
 
 | `phpstan/phpstan` version | `mavimo/phpstan-junit` version |
-|---------------------------|--------------------------------|
+| ------------------------- | ------------------------------ |
 | `0.10.x`                  | `0.1.x`                        |
 | `0.11.x`                  | `0.2.x`                        |
 | `0.12.x`                  | `0.3.x`                        |
@@ -29,41 +29,45 @@ But if alredy specified the `phpstan/phpstan` version you can just use:
 composer require --dev mavimo/phpstan-junit
 ```
 
-If you also install [phpstan/extension-installer](https://github.com/phpstan/extension-installer) then you're all set, otherwise take a look to *manual setup* section below.
+If you also install [phpstan/extension-installer](https://github.com/phpstan/extension-installer) then you're all set, otherwise take a look to _manual setup_ section below.
 
 <details>
-  <summary><strong>Manual setup</strong></summary>
+  <summary><strong>Manual setup for PHPStan 0.11 and next</strong></summary>
   if you don't want to use `phpstan/extension-installer`, you should require the `extension.neon` file on your `phpstan.neon.dist` file in the root of your project (or on the file you specify to phpstan using the `--config` flag):
 
-  ```yaml
-  includes:
-      - vendor/mavimo/phpstan-junit/extension.neon
-  ```
+```yaml
+includes:
+    - vendor/mavimo/phpstan-junit/extension.neon
+```
+
   or declaring the service via:
-  ```yaml
-  services:
-      errorFormatter.junit:
-          class: Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
-  ```
+
+```yaml
+services:
+    errorFormatter.junit:
+        class: Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
+```
+
 </details>
 
 <details>
-  <summary><strong>PHPStan 0.10</strong></summary>
+  <summary><strong>Manual setup for PHPStan 0.10</strong></summary>
   <br />
   You should require this extension on `phpstan.neon` file in the root of your project or the file you specify to phpstan using the `--config` flag by referencing `extension.neon` file:
 
-  ```yaml
-  includes:
-      - vendor/mavimo/phpstan-junit/phpstan.neon
-  ```
+```yaml
+includes:
+    - vendor/mavimo/phpstan-junit/phpstan.neon
+```
 
   or declaring the service via:
 
-  ```yaml
-  services:
-      errorFormatter.junit:
-          class: Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
-  ```
+```yaml
+services:
+    errorFormatter.junit:
+        class: Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
+```
+
 </details>
 
 ### Generate JUnit report
@@ -80,9 +84,9 @@ Contributions are welcome!
 
 PR's will be merged only if:
 
-- *phpunit* is :white_check_mark:, you can run it using `vendor/bin/phpunit`
-- *phpstan* is :white_check_mark:, you can run it using `vendor/bin/phpstan analyse`
-- *phpcs* is :white_check_mark:, you can run it using `vendor/bin/phpcs`
-- *code coverage* will not decrease (or there are good reason to decrease it), you can check the current coverage using `phpdbg -qrr ./vendor/bin/phpunit --coverage-text`
+-   _phpunit_ is :white_check_mark:, you can run it using `vendor/bin/phpunit`
+-   _phpstan_ is :white_check_mark:, you can run it using `vendor/bin/phpstan analyse`
+-   _phpcs_ is :white_check_mark:, you can run it using `vendor/bin/phpcs`
+-   _code coverage_ will not decrease (or there are good reason to decrease it), you can check the current coverage using `phpdbg -qrr ./vendor/bin/phpunit --coverage-text`
 
 If you have any question feel free to open a issue or contact me!
