@@ -39,21 +39,17 @@ class JunitErrorFormatter implements ErrorFormatter
         $testsuite->setAttribute('xsi:noNamespaceSchemaLocation', 'https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd');
         $dom->appendChild($testsuite);
 
+        foreach ($analysisResult->getFileSpecificErrors() as $error) {
+            $fileName = $this->relativePathHelper->getRelativePath($error->getFile());
+            $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
+        }
+
+        foreach ($analysisResult->getNotFileSpecificErrors() as $genericError) {
+            $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
+        }
+
         if (!$analysisResult->hasErrors()) {
             $this->createTestCase($dom, $testsuite, 'phpstan');
-        } else {
-            $fileErrors = $analysisResult->getFileSpecificErrors();
-
-            foreach ($fileErrors as $error) {
-                $fileName = $this->relativePathHelper->getRelativePath($error->getFile());
-                $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
-            }
-
-            $genericErrors = $analysisResult->getNotFileSpecificErrors();
-
-            foreach ($genericErrors as $genericError) {
-                $this->createTestCase($dom, $testsuite, 'Generic error', $genericError);
-            }
         }
 
         $output->writeRaw($dom->saveXML());
