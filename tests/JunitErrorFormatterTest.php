@@ -13,6 +13,18 @@ use PHPStan\Testing\ErrorFormatterTestCase;
 class JunitErrorFormatterTest extends ErrorFormatterTestCase
 {
     /**
+     * @var \Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter
+     */
+    private $formatter;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->formatter = new JunitErrorFormatter(new SimpleRelativePathHelper(self::DIRECTORY_PATH));
+    }
+
+    /**
      * phpcs:disable
      *
      * @return \Generator<array<int, string|int>>
@@ -21,8 +33,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
      */
     public function dataFormatterOutputProvider(): Generator
     {
-        yield [
-            'No errors',
+        yield 'No errors' => [
             0,
             0,
             0,
@@ -33,8 +44,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
 ',
         ];
 
-        yield [
-            'One file error',
+        yield 'One file error' => [
             1,
             1,
             0,
@@ -47,8 +57,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
 ',
         ];
 
-        yield [
-            'One generic error',
+        yield 'One generic error' => [
             1,
             0,
             1,
@@ -61,8 +70,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
 ',
         ];
 
-        yield [
-            'Multiple file errors',
+        yield 'Multiple file errors' => [
             1,
             4,
             0,
@@ -84,8 +92,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
 ',
         ];
 
-        yield [
-            'Multiple generic errors',
+        yield 'Multiple generic errors' => [
             1,
             0,
             2,
@@ -101,8 +108,7 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
 ',
         ];
 
-        yield [
-            'Multiple file, multiple generic errors',
+        yield 'Multiple file, multiple generic errors' => [
             1,
             4,
             2,
@@ -135,31 +141,38 @@ class JunitErrorFormatterTest extends ErrorFormatterTestCase
      * Test generated use cases for JUnit output format.
      *
      * @dataProvider dataFormatterOutputProvider
-     * @param string $message
      * @param int    $exitCode
      * @param int    $numFileErrors
      * @param int    $numGenericErrors
      * @param string $expected
      */
     public function testFormatErrors(
-        string $message,
         int $exitCode,
         int $numFileErrors,
         int $numGenericErrors,
         string $expected
     ): void {
-        $formatter = new JunitErrorFormatter(new SimpleRelativePathHelper(self::DIRECTORY_PATH));
-
-        $this->assertSame($exitCode, $formatter->formatErrors(
-            $this->getAnalysisResult($numFileErrors, $numGenericErrors),
-            $this->getOutput()
-        ), sprintf('%s: response code do not match', $message));
+        $this->assertSame(
+            $exitCode,
+            $this->formatter->formatErrors(
+                $this->getAnalysisResult($numFileErrors, $numGenericErrors),
+                $this->getOutput()
+            ),
+            'Response code do not match'
+        );
 
         $xml = new DOMDocument();
         $xml->loadXML($this->getOutputContent());
 
-        $this->assertTrue($xml->schemaValidate('https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd'));
+        $this->assertTrue(
+            $xml->schemaValidate('https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd'),
+            'Schema do not validate'
+        );
 
-        $this->assertXmlStringEqualsXmlString($expected, $this->getOutputContent(), sprintf('%s: XML do not match', $message));
+        $this->assertXmlStringEqualsXmlString(
+            $expected,
+            $this->getOutputContent(),
+            'XML do not match'
+        );
     }
 }
