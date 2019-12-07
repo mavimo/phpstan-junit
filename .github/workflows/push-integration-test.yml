@@ -4,8 +4,14 @@ jobs:
   integration-test:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4']
+
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
 
     - name: prepare
       uses: docker://golang
@@ -13,12 +19,28 @@ jobs:
         entrypoint: sh
         args: -c "go get github.com/drone/envsubst/cmd/envsubst; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
 
-    - name: composer-install
-      uses: docker://composer
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v1 #https://github.com/shivammathur/setup-php
       with:
-        args: install --working-dir tests-integration
+        php-version: ${{ matrix.php-versions }}
+        extension-csv: mbstring
+        coverage: xdebug #optional
 
-    - name: test
-      uses: docker://php:7.2
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v1
       with:
-        args: tests-integration/vendor/bin/phpstan analyse --configuration tests-integration/phpstan.neon.dist --no-progress --error-format=junit src
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install Composer dependencies
+      run: |
+        composer install --working-dir tests-integration --no-progress --no-suggest --prefer-dist
+
+    - name: Execute integration test
+      run: |
+        php tests-integration/vendor/bin/phpstan analyse --configuration tests-integration/phpstan.neon.dist --no-progress --error-format=junit src
