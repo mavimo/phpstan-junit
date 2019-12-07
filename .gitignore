@@ -3,4 +3,5 @@
 /.phpunit.result.cache
 /clover-report.xml
 /tests-integration/vendor
+/tests-integration/composer.json
 /tests-integration/composer.lock
