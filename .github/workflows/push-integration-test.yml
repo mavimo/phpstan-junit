@@ -8,10 +8,16 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: prepare
-      uses: docker://bash
+      uses: docker://golang
       with:
         entrypoint: sh
-        args: -l -c "sed -i 's/{GITHUB_SHA}/'\"${GITHUB_SHA}\"'/' ${GITHUB_WORKSPACE}/tests-integration/composer.json"
+        args: -c "go get github.com/drone/envsubst/cmd/envsubst; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
+
+    - name: get-composer-content
+      uses: docker://bash
+      with:
+        entrypoint: bash
+        args: -l -c "cat ${GITHUB_WORKSPACE}/tests-integration/composer.json"
 
     - name: composer-install
       uses: docker://composer
@@ -21,5 +27,4 @@ jobs:
     - name: test
       uses: docker://php:7.2
       with:
-        args: tests-integration/vendor/bin/phpstan analyse --configuration tests-integration/phpstan.neon.dist
-          --no-progress --error-format=junit src
+        args: tests-integration/vendor/bin/phpstan analyse --configuration tests-integration/phpstan.neon.dist --no-progress --error-format=junit src

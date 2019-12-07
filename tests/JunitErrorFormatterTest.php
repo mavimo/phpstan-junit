@@ -7,15 +7,17 @@ namespace Mavimo\Tests\PHPStan\ErrorFormatter;
 use DOMDocument;
 use Generator;
 use Mavimo\PHPStan\ErrorFormatter\JunitErrorFormatter;
-use PHPStan\Command\ErrorFormatter\TestBaseFormatter;
 use PHPStan\File\SimpleRelativePathHelper;
+use PHPStan\Testing\ErrorFormatterTestCase;
 
-class JunitErrorFormatterTest extends TestBaseFormatter
+class JunitErrorFormatterTest extends ErrorFormatterTestCase
 {
     /**
-     * [dataFormatterOutputProvider description]
+     * phpcs:disable
      *
      * @return \Generator<array<int, string|int>>
+     *
+     * phpcs:enable
      */
     public function dataFormatterOutputProvider(): Generator
     {
@@ -150,9 +152,9 @@ class JunitErrorFormatterTest extends TestBaseFormatter
 
         $this->assertSame($exitCode, $formatter->formatErrors(
             $this->getAnalysisResult($numFileErrors, $numGenericErrors),
-            $this->getErrorConsoleStyle()
+            $this->getOutput()
         ), sprintf('%s: response code do not match', $message));
-        
+
         $xml = new DOMDocument();
         $xml->loadXML($this->getOutputContent());
 

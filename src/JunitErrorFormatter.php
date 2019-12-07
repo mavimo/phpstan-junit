@@ -8,9 +8,8 @@ use DOMDocument;
 use DOMElement;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
+use PHPStan\Command\Output;
 use PHPStan\File\RelativePathHelper;
-use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Style\OutputStyle;
 use function sprintf;
 
 class JunitErrorFormatter implements ErrorFormatter
@@ -27,7 +26,7 @@ class JunitErrorFormatter implements ErrorFormatter
 
     public function formatErrors(
         AnalysisResult $analysisResult,
-        OutputStyle $style
+        Output $output
     ): int {
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
@@ -57,7 +56,7 @@ class JunitErrorFormatter implements ErrorFormatter
             }
         }
 
-        $style->write($style->isDecorated() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML());
+        $output->writeRaw($dom->saveXML());
 
         return intval($analysisResult->hasErrors());
     }

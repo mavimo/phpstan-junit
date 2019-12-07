@@ -10,7 +10,7 @@ jobs:
     - name: composer-install
       uses: docker://composer
       with:
-        args: install --prefer-source --no-progress
+        args: install --no-progress
 
     - name: phpunit
       uses: docker://php:7.2
@@ -18,7 +18,7 @@ jobs:
         args: phpdbg -qrr ./vendor/bin/phpunit
 
     - name: codecoverage
-      uses: pleo-io/actions/codecov@master
+      uses: pleo-io/actions/codecov@v1
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
@@ -33,7 +33,7 @@ jobs:
     - name: composer-install
       uses: docker://composer
       with:
-        args: install --prefer-source --no-progress
+        args: install --no-progress
 
     - name: phpstan
       uses: docker://php:7.2
@@ -49,7 +49,7 @@ jobs:
     - name: composer-install
       uses: docker://composer
       with:
-        args: install --prefer-source --no-progress
+        args: install --no-progress
 
     - name: phpcs
       uses: docker://php:7.2
