@@ -25,7 +25,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12-dev",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^9.1",
         "slevomat/coding-standard": "^6.0"
     },
     "autoload": {
