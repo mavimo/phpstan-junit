@@ -52,7 +52,7 @@ class JunitErrorFormatter implements ErrorFormatter
             $this->createTestCase($dom, $testsuite, 'phpstan');
         }
 
-        $output->writeRaw($dom->saveXML());
+        $output->writeRaw($dom->saveXML() ?: '');
 
         return intval($analysisResult->hasErrors());
     }
