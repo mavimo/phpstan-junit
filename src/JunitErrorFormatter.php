@@ -64,7 +64,7 @@ class JunitErrorFormatter implements ErrorFormatter
         if ($xmlOutput === false) {
             $output->writeRaw('');
         } else {
-            $output->writeRaw($dom->saveXML());
+            $output->writeRaw($xmlOutput);
         }
 
         return intval($analysisResult->hasErrors());
@@ -81,9 +81,10 @@ class JunitErrorFormatter implements ErrorFormatter
 
         if ($message !== null) {
             $failure = $dom->createElement('failure');
+            /** @var false|string[] $newMessage */
             $newMessage = explode("\n", $message);
 
-            if ($newMessage === false) {
+            if ($newMessage === false || count($newMessage) === 0) {
                 $newMessage = [$message];
             }
 
