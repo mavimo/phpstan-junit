@@ -24,10 +24,8 @@ class JunitErrorFormatter implements ErrorFormatter
         $this->relativePathHelper = $relativePathHelper;
     }
 
-    public function formatErrors(
-        AnalysisResult $analysisResult,
-        Output $output
-    ): int {
+    public function formatErrors(AnalysisResult $analysisResult, Output $output): int
+    {
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
@@ -36,12 +34,21 @@ class JunitErrorFormatter implements ErrorFormatter
         $testsuite->setAttribute('name', 'phpstan');
         $testsuite->setAttribute('tests', (string) $analysisResult->getTotalErrorsCount());
         $testsuite->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $testsuite->setAttribute('xsi:noNamespaceSchemaLocation', 'https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd');
+        $testsuite->setAttribute(
+            'xsi:noNamespaceSchemaLocation',
+            'https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/'
+                . 'jenkins-junit.xsd'
+        );
         $dom->appendChild($testsuite);
 
         foreach ($analysisResult->getFileSpecificErrors() as $error) {
             $fileName = $this->relativePathHelper->getRelativePath($error->getFile());
-            $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
+            $this->createTestCase(
+                $dom,
+                $testsuite,
+                sprintf('%s:%s', $fileName, $error->getLine()),
+                $error->getMessage()
+            );
         }
 
         foreach ($analysisResult->getNotFileSpecificErrors() as $genericError) {
@@ -52,13 +59,23 @@ class JunitErrorFormatter implements ErrorFormatter
             $this->createTestCase($dom, $testsuite, 'phpstan');
         }
 
-        $output->writeRaw($dom->saveXML() ?: '');
+        $xmlOutput = $dom->saveXML();
+
+        if ($xmlOutput === false) {
+            $output->writeRaw('');
+        } else {
+            $output->writeRaw($dom->saveXML());
+        }
 
         return intval($analysisResult->hasErrors());
     }
 
-    private function createTestCase(DOMDocument $dom, DOMElement $testsuite, string $reference, ?string $message = null): void
-    {
+    private function createTestCase(
+        DOMDocument $dom,
+        DOMElement $testsuite,
+        string $reference,
+        ?string $message = null
+    ): void {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
 

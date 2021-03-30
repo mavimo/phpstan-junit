@@ -17,6 +17,7 @@
 
     <rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
             <exclude name="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment"/>
+            <exclude name="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment"/>
             <exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses"/>
             <exclude name="SlevomatCodingStandard.ControlStructures.RequireYodaComparison"/>
             <exclude name="SlevomatCodingStandard.Functions.TrailingCommaInCall"/>
