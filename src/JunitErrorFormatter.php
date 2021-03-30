@@ -81,7 +81,12 @@ class JunitErrorFormatter implements ErrorFormatter
 
         if ($message !== null) {
             $failure = $dom->createElement('failure');
-            $failure->setAttribute('message', $message);
+            $newMessage = explode("\n", $message);
+            if ($newMessage === false) {
+                $newMessage = [$message];
+            }
+
+            $failure->setAttribute('message', $newMessage[0]);
 
             $testcase->appendChild($failure);
         }
