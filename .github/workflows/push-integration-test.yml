@@ -17,7 +17,7 @@ jobs:
       uses: docker://golang
       with:
         entrypoint: sh
-        args: -c "go get github.com/drone/envsubst/cmd/envsubst; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
+        args: -c "go get github.com/a8m/envsubst/cmd/envsubst; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
