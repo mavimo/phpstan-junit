@@ -17,6 +17,6 @@
     "require-dev": {
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
-        "mavimo/phpstan-junit": "dev-master#${GITHUB_SHA}"
+        "mavimo/phpstan-junit": "dev-master#${GITHUB_SHA} as 1.0"
     }
 }
