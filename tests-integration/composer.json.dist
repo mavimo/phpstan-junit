@@ -6,17 +6,11 @@
             "email": "mavimo@gmail.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "../"
-        }
-    ],
     "minimum-stability": "dev",
     "require": {},
     "require-dev": {
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
-        "mavimo/phpstan-junit": "dev-master#${GITHUB_SHA} as 1.0"
+        "mavimo/phpstan-junit": "dev-master#${GITHUB_SHA}"
     }
 }
