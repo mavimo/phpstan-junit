@@ -38,7 +38,7 @@ jobs:
 
     - name: Install Composer dependencies
       run: |
-        composer install --working-dir tests-integration --no-progress --no-suggest --prefer-dist
+        composer update --working-dir tests-integration --no-progress --prefer-dist
 
     - name: Execute integration test
       run: |

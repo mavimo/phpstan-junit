@@ -33,7 +33,7 @@ jobs:
 
     - name: Install Composer dependencies
       run: |
-        composer install --no-progress --no-suggest --prefer-dist
+        composer update --no-progress --prefer-dist
 
     - name: Run Tests
       run: |
