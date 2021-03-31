@@ -16,7 +16,7 @@ jobs:
     - name: prepare
       uses: docker://golang
       with:
-        entrypoint: sh
+        entrypoint: bash
         args: -c "pushd ~; git clone https://github.com/drone/envsubst.git; pushd envsubst/cmd/envsubst; go build; go install; popd; popd; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
 
     - name: Setup PHP
