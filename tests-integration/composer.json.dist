@@ -6,6 +6,12 @@
             "email": "mavimo@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "../"
+        }
+    ],
     "minimum-stability": "dev",
     "require": {},
     "require-dev": {
