@@ -14,10 +14,10 @@ jobs:
       uses: actions/checkout@v1
 
     - name: prepare
-      uses: docker://ubuntu:latest
+      uses: docker://golang
       with:
         entrypoint: sh
-        args: -c "apt update; apt install gettext-base; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
+        args: -c "pushd ~; git clone https://github.com/drone/envsubst.git; pushd envsubst/cmd/envsubst; go build; go install; popd; popd; envsubst < ${GITHUB_WORKSPACE}/tests-integration/composer.json.dist > ${GITHUB_WORKSPACE}/tests-integration/composer.json"
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
