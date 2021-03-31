@@ -1,16 +1,19 @@
 {
-    "name": "mavimo/phpstan-junit-tests-integration",
+    "name": "magikid/phpstan-junit-tests-integration",
     "authors": [
         {
             "name": "Marco Vito Moscaritolo",
             "email": "mavimo@gmail.com"
+        },
+        {
+            "name": "Chris W Jones",
+            "email": "chris@christopherjones.us"
         }
     ],
     "repositories": [
         {
             "type": "vcs",
             "url": "../",
-            "canonical": false
         }
     ],
     "minimum-stability": "dev",
@@ -18,6 +21,6 @@
     "require-dev": {
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
-        "mavimo/phpstan-junit": "dev-${GITHUB_REF#refs/heads/}#${GITHUB_SHA}"
+        "magikid/phpstan-junit": "dev-${GITHUB_REF#refs/heads/}#${GITHUB_SHA}"
     }
 }

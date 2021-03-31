@@ -1,5 +1,5 @@
 {
-    "name": "mavimo/phpstan-junit",
+    "name": "magikid/phpstan-junit",
     "description": "PHPStan JUnit error reporter",
     "type": "phpstan-extension",
     "license": [
@@ -9,6 +9,10 @@
         {
             "name": "Marco Vito Moscaritolo",
             "email": "mavimo@gmail.com"
+        },
+        {
+            "name": "Chris W Jones",
+            "email": "chris@christopherjones.us"
         }
     ],
     "minimum-stability": "stable",
