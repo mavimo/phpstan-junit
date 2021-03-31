@@ -9,7 +9,8 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "../"
+            "url": "../",
+            "canonical": false
         }
     ],
     "minimum-stability": "dev",
