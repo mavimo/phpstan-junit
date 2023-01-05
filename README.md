@@ -11,6 +11,11 @@
 
 The main scope for this project is to create error report in **JUnit** format that can be easly integrated in _Jenkins_ or other tools that use this information.
 
+## DEPRECATION
+
+> **Warning**
+> This project is not needed anymore since this feature is now built-in into PHPStan itself
+
 ## How to use it
 
 ### Install
